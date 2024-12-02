@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qin.cwgl.dao.OrderDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qin.cwgl.entity.OrderEntity" id="orderMap">
+        <result property="id" column="id"/>
+        <result property="petid" column="petid"/>
+        <result property="userid" column="userid"/>
+        <result property="doctid" column="doctid"/>
+        <result property="status" column="status"/>
+        <result property="sumprice" column="sumprice"/>
+        <result property="dis1" column="dis_1"/>
+        <result property="dis2" column="dis_2"/>
+        <result property="dis3" column="dis_3"/>
+        <result property="dis4" column="dis_4"/>
+        <result property="dis5" column="dis_5"/>
+        <result property="med1" column="med_1"/>
+        <result property="med2" column="med_2"/>
+        <result property="med3" column="med_3"/>
+        <result property="med4" column="med_4"/>
+        <result property="med5" column="med_5"/>
+        <result property="med6" column="med_6"/>
+        <result property="med7" column="med_7"/>
+        <result property="med8" column="med_8"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+    <select id="mon" parameterType="com.qin.cwgl.entity.OrderEntity" resultType="double">
+       select 0
+        <if test="(med1 != null and med1 != '') ">
+         + ( select price from qh_medicine where id = #{med1} )
+        </if>
+        <if test="(med2 != null and med2 != '') ">
+            + ( select price from qh_medicine where id = #{med2} )
+        </if>
+        <if test="(med3 != null and med3 != '') ">
+            + ( select price from qh_medicine where id = #{med3} )
+        </if>
+        <if test="(med4 != null and med4 != '') ">
+            + ( select price from qh_medicine where id = #{med4} )
+        </if>
+        <if test="(med5 != null and med5 != '') ">
+            + ( select price from qh_medicine where id = #{med5} )
+        </if>
+        <if test="(med6 != null and med6 != '') ">
+            + ( select price from qh_medicine where id = #{med6} )
+        </if>
+        <if test="(med7 != null and med7 != '') ">
+            + ( select price from qh_medicine where id = #{med7} )
+        </if>
+        <if test="(med8 != null and med8 != '') ">
+            + ( select price from qh_medicine where id = #{med8} )
+        </if>
+
+
+    </select>
+
+    <select id="t1" resultType="com.qin.cwgl.entity.from.idcount" >
+        SELECT DATE_FORMAT(create_time, '%m') as name ,COUNT(*) AS value FROM qh_order GROUP BY name ORDER BY name
+    </select>
+
+    <select id="t2" resultType="com.qin.cwgl.entity.from.idcount" >
+        SELECT DATE_FORMAT(create_time, '%m') as name ,sum(sumprice) AS value FROM qh_order GROUP BY name ORDER BY name
+    </select>
+
+    <select id="t3" resultType="com.qin.cwgl.entity.from.idcount" >
+        SELECT classtype as name,COUNT(*) AS value  FROM qh_pet GROUP BY classtype ORDER BY classtype
+    </select>
+
+    <select id="t4" resultType="com.qin.cwgl.entity.from.idcount" >
+        WITH a as(
+            SELECT med1, COUNT(*) AS count
+            FROM qh_order  GROUP BY med1
+            UNION
+            SELECT med2 as med1, COUNT(*) AS count
+            FROM qh_order GROUP BY med2
+            UNION
+            SELECT med3 as med1, COUNT(*) AS count
+            FROM qh_order GROUP BY med3
+            UNION
+            SELECT med4 as med1, COUNT(*) AS count
+            FROM qh_order GROUP BY med4
+            UNION
+            SELECT med5 as med1, COUNT(*) AS count
+            FROM qh_order GROUP BY med5
+            UNION
+            SELECT med6 as med1, COUNT(*) AS count
+            FROM qh_order GROUP BY med6
+            UNION
+            SELECT med7 as med1, COUNT(*) AS count
+            FROM qh_order GROUP BY med7
+            UNION
+            SELECT med8 as med1, COUNT(*) AS count
+            FROM qh_order GROUP BY med8
+
+        )
+        SELECT b.name as name,SUM(count) as value from a
+                                                           LEFT JOIN qh_medicine b on a.med1 = b.id where a.med1 is not NULL GROUP BY name
+    </select>
+
+    <select id="t5" resultType="com.qin.cwgl.entity.from.idcount" >
+        WITH a as(
+            SELECT dis1, COUNT(*) AS count
+            FROM qh_order  GROUP BY dis1
+            UNION
+            SELECT dis2 as dis1, COUNT(*) AS count
+            FROM qh_order GROUP BY dis2
+            UNION
+            SELECT dis3 as dis1, COUNT(*) AS count
+            FROM qh_order GROUP BY dis3
+            UNION
+            SELECT dis4 as dis1, COUNT(*) AS count
+            FROM qh_order GROUP BY dis4
+            UNION
+            SELECT dis5 as dis1, COUNT(*) AS count
+            FROM qh_order GROUP BY dis5
+
+        )
+        SELECT b.name as name,SUM(count) as value from a
+                                          LEFT JOIN qh_disease b on a.dis1 = b.id where a.dis1 is not NULL GROUP BY name
+
+    </select>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qin.cwgl.dao.MedicineDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qin.cwgl.entity.MedicineEntity" id="medicineMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="instruction" column="Instruction"/>
+        <result property="treatment" column="treatment"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectmed" parameterType="map" resultType="com.qin.cwgl.entity.from.idname">
+        call p1();
+    </select>
+
+</mapper>
